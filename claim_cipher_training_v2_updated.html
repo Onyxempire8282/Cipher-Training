@@ -1,0 +1,2220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claim Cipher Training — The Execution System for Auto Damage Appraisers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:      #0e0e0e;
+  --paper:    #f5f0e8;
+  --cream:    #ede8dc;
+  --gold:     #c8881a;
+  --gold-lt:  #e6a830;
+  --rust:     #b84a2a;
+  --steel:    #2a3540;
+  --slate:    #1a2530;
+  --mist:     #8a9bab;
+  --white:    #ffffff;
+  --mono: 'DM Mono', monospace;
+  --serif: 'Libre Baskerville', Georgia, serif;
+  --display: 'Bebas Neue', sans-serif;
+  --sans: 'Manrope', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--ink);
+  color: var(--paper);
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: .4;
+}
+
+/* ── NAV ─────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 48px;
+  background: rgba(14,14,14,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(200,136,26,0.2);
+  transition: padding 0.3s;
+}
+.nav-logo {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--paper); }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--mist);
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--gold); }
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--gold);
+  color: var(--ink);
+  padding: 10px 24px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.nav-cta:hover { background: var(--gold-lt); }
+
+/* ── HERO ─────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  overflow: hidden;
+}
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 140px 64px 80px 64px;
+  position: relative;
+  z-index: 2;
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero-eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--gold); }
+.hero-title {
+  font-family: var(--display);
+  font-size: clamp(4rem, 6vw, 7.5rem);
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  margin-bottom: 32px;
+}
+.hero-title .line-gold { color: var(--gold); display: block; }
+.hero-title .line-rust { color: var(--rust); display: block; }
+.hero-title .line-dim  { color: var(--mist); display: block; font-size: 0.58em; letter-spacing: 0.06em; }
+.hero-sub {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: rgba(245,240,232,0.72);
+  max-width: 480px;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+.hero-not-a-course {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(184,74,42,0.15);
+  border: 1px solid rgba(184,74,42,0.5);
+  padding: 10px 18px;
+  margin-bottom: 36px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rust);
+}
+.hero-not-a-course span { color: rgba(245,240,232,0.5); }
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 64px; }
+.btn-primary {
+  background: var(--gold);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 16px 40px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+}
+.btn-primary::after { content: '→'; margin-left: 10px; }
+.btn-primary:hover { background: var(--gold-lt); transform: translateY(-2px); }
+.btn-ghost {
+  background: transparent;
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 16px 40px;
+  border: 1px solid rgba(245,240,232,0.3);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+}
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+.hero-stats { display: flex; gap: 40px; }
+.stat { display: flex; flex-direction: column; gap: 4px; }
+.stat-number { font-family: var(--display); font-size: 2.8rem; color: var(--gold); line-height: 1; }
+.stat-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mist); }
+.hero-right { position: relative; overflow: hidden; }
+.hero-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(14,14,14,0.95) 0%, rgba(14,14,14,0.3) 60%, transparent 100%),
+              linear-gradient(to bottom, transparent 60%, rgba(14,14,14,0.9) 100%);
+  z-index: 1;
+}
+.hero-bg-img {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 70% 40%, rgba(200,136,26,0.12) 0%, transparent 60%),
+              radial-gradient(ellipse at 30% 80%, rgba(184,74,42,0.08) 0%, transparent 50%),
+              linear-gradient(160deg, #1a2530 0%, #0e0e0e 100%);
+}
+.hero-grid { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.grid-lines {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(200,136,26,0.06) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(200,136,26,0.06) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: grid-drift 20s linear infinite;
+}
+@keyframes grid-drift { 0% { transform: translate(0,0); } 100% { transform: translate(60px,60px); } }
+.hero-badge { position: absolute; bottom: 60px; right: 60px; z-index: 2; width: 160px; height: 160px; }
+.badge-ring {
+  width: 160px; height: 160px;
+  border: 2px solid var(--gold); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  position: relative;
+  animation: badge-spin 30s linear infinite;
+}
+@keyframes badge-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.badge-inner {
+  position: absolute; inset: 12px;
+  border: 1px solid rgba(200,136,26,0.4); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  animation: badge-spin 30s linear infinite reverse; gap: 2px;
+}
+.badge-inner span:first-child { font-family: var(--display); font-size: 2.4rem; color: var(--gold); line-height: 1; }
+.badge-inner span:last-child { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mist); text-align: center; padding: 0 10px; }
+.hero-float { position: absolute; z-index: 2; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(200,136,26,0.6); white-space: nowrap; }
+.hf1 { top: 25%; left: 8%; writing-mode: vertical-rl; }
+.hf2 { top: 45%; right: 20%; }
+.hf3 { bottom: 30%; left: 15%; }
+
+/* ── TICKER ───────────────────────────────────── */
+.ticker-wrap { background: var(--gold); overflow: hidden; padding: 14px 0; }
+.ticker-track { display: flex; white-space: nowrap; animation: ticker 35s linear infinite; }
+@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.ticker-item { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink); padding: 0 40px; display: flex; align-items: center; gap: 16px; }
+.ticker-item::after { content: '◆'; font-size: 0.5rem; }
+
+/* ── SHARED UTILS ─────────────────────────────── */
+.section-label {
+  font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--rust); margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-label::before { content: ''; width: 32px; height: 1px; background: var(--rust); }
+.section-label.gold { color: var(--gold); }
+.section-label.gold::before { background: var(--gold); }
+
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── INTRO / POSITIONING ──────────────────────── */
+.intro {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 120px 64px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: start;
+}
+.intro-headline { font-family: var(--serif); font-size: clamp(2rem, 3vw, 3.2rem); line-height: 1.2; color: var(--slate); margin-bottom: 28px; }
+.intro-headline em { font-style: italic; color: var(--rust); }
+.intro-body { font-size: 1rem; line-height: 1.8; color: #3a3a3a; margin-bottom: 20px; }
+.not-a-course-block {
+  background: var(--slate);
+  padding: 28px 32px;
+  margin-top: 28px;
+  border-left: 4px solid var(--gold);
+}
+.not-a-course-block p { font-size: 0.9rem; line-height: 1.75; color: rgba(245,240,232,0.8); }
+.not-a-course-block strong { color: var(--gold); }
+.who-list { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+.who-item {
+  display: flex; gap: 20px; align-items: flex-start;
+  padding: 24px; border: 1px solid rgba(42,53,64,0.12); background: var(--cream);
+  transition: all 0.25s;
+}
+.who-item:hover { border-color: var(--gold); transform: translateX(6px); }
+.who-num { font-family: var(--display); font-size: 3rem; line-height: 1; color: rgba(200,136,26,0.25); flex-shrink: 0; width: 48px; }
+.who-text strong { display: block; font-family: var(--sans); font-weight: 700; font-size: 0.9rem; color: var(--slate); margin-bottom: 4px; }
+.who-text span { font-size: 0.82rem; color: #5a5a5a; line-height: 1.5; }
+
+/* ── PIPELINE — HOW YOU BECOME JOB-READY ─────── */
+.pipeline {
+  background: var(--slate);
+  padding: 120px 64px;
+  position: relative;
+  overflow: hidden;
+}
+.pipeline::before {
+  content: 'PIPELINE';
+  position: absolute; top: 30px; right: -30px;
+  font-family: var(--display); font-size: 9rem;
+  color: rgba(255,255,255,0.02); letter-spacing: 0.05em;
+  white-space: nowrap; pointer-events: none;
+}
+.pipeline-header { text-align: center; margin-bottom: 80px; }
+.pipeline-title { font-family: var(--display); font-size: clamp(3rem,5vw,6rem); color: var(--paper); letter-spacing: 0.03em; line-height: 0.92; margin-bottom: 16px; }
+.pipeline-subtitle { font-family: var(--serif); font-size: 1.1rem; font-style: italic; color: rgba(245,240,232,0.55); max-width: 600px; margin: 0 auto; }
+
+.pipeline-steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  position: relative;
+}
+.pipeline-steps::before {
+  content: '';
+  position: absolute;
+  top: 52px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold) 0%, rgba(200,136,26,0.2) 100%);
+  z-index: 0;
+}
+.pipeline-step {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; padding: 0 16px;
+  position: relative; z-index: 1;
+}
+.step-node {
+  width: 104px; height: 104px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--slate);
+  margin-bottom: 24px;
+  transition: all 0.3s;
+  position: relative;
+}
+.step-node::before {
+  content: '';
+  position: absolute; inset: 6px;
+  border: 1px solid rgba(200,136,26,0.2);
+  border-radius: 50%;
+}
+.pipeline-step:hover .step-node {
+  background: rgba(200,136,26,0.12);
+  transform: scale(1.06);
+}
+.step-num { font-family: var(--display); font-size: 2.2rem; color: var(--gold); line-height: 1; }
+.step-icon { font-size: 1.1rem; margin-top: 2px; }
+.step-name { font-family: var(--display); font-size: 1.2rem; letter-spacing: 0.05em; color: var(--paper); margin-bottom: 8px; }
+.step-desc { font-size: 0.78rem; line-height: 1.55; color: var(--mist); }
+.step-tag {
+  margin-top: 14px;
+  font-family: var(--mono); font-size: 0.58rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--ink); background: var(--gold);
+  padding: 4px 10px; white-space: nowrap;
+}
+.pipeline-step.active .step-node { background: rgba(200,136,26,0.18); border-color: var(--gold-lt); }
+.pipeline-step.active .step-num { color: var(--gold-lt); }
+
+.pipeline-note {
+  margin-top: 64px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+.pipeline-note-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 28px 28px;
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.pn-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+.pn-text strong { display: block; font-weight: 700; font-size: 0.88rem; color: var(--paper); margin-bottom: 4px; }
+.pn-text span { font-size: 0.78rem; color: var(--mist); line-height: 1.5; }
+
+/* ── NO OVERWHELM ─────────────────────────────── */
+.no-overwhelm {
+  background: var(--ink);
+  padding: 100px 64px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.no-overwhelm-left {}
+.no-overwhelm-title { font-family: var(--display); font-size: clamp(3rem,4.5vw,5.5rem); line-height: 0.92; color: var(--paper); margin-bottom: 24px; }
+.no-overwhelm-title span { color: var(--gold); display: block; }
+.no-overwhelm-body { font-size: 0.95rem; line-height: 1.8; color: rgba(245,240,232,0.6); margin-bottom: 28px; }
+.no-overwhelm-right {}
+.overwhelm-comparison { display: flex; flex-direction: column; gap: 0; }
+.oc-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.oc-row:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+.oc-them, .oc-us {
+  padding: 18px 20px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.oc-them { color: rgba(245,240,232,0.35); border-right: 1px solid rgba(255,255,255,0.06); }
+.oc-us { color: rgba(245,240,232,0.85); background: rgba(200,136,26,0.04); }
+.oc-icon { flex-shrink: 0; margin-top: 1px; font-size: 0.85rem; }
+.oc-header { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 0; }
+.oc-header-them, .oc-header-us {
+  padding: 12px 20px;
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase;
+}
+.oc-header-them { background: rgba(255,255,255,0.04); color: var(--mist); border-right: 1px solid rgba(255,255,255,0.06); }
+.oc-header-us { background: rgba(200,136,26,0.1); color: var(--gold); }
+
+/* ── MODULES ──────────────────────────────────── */
+.modules {
+  background: var(--slate);
+  padding: 120px 64px;
+  position: relative;
+  overflow: hidden;
+}
+.modules::before {
+  content: 'CURRICULUM';
+  position: absolute; top: 40px; right: -20px;
+  font-family: var(--display); font-size: 10rem;
+  color: rgba(255,255,255,0.02); letter-spacing: 0.05em;
+  white-space: nowrap; pointer-events: none;
+}
+.section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 64px; }
+.section-title { font-family: var(--display); font-size: clamp(3rem, 4.5vw, 5.5rem); line-height: 0.95; letter-spacing: 0.03em; color: var(--paper); }
+.section-count { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mist); text-align: right; line-height: 1.6; }
+.modules-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+.module-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 36px 32px;
+  position: relative; cursor: pointer;
+  transition: all 0.3s; overflow: hidden;
+}
+.module-card::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.35s ease; }
+.module-card:hover::before { transform: scaleX(1); }
+.module-card:hover { background: rgba(200,136,26,0.07); border-color: rgba(200,136,26,0.2); }
+.module-card.featured { background: rgba(200,136,26,0.1); border-color: rgba(200,136,26,0.35); grid-column: span 2; }
+.module-card.featured::before { background: var(--rust); }
+.module-num { font-family: var(--display); font-size: 4.5rem; line-height: 1; color: rgba(255,255,255,0.08); margin-bottom: 16px; display: block; }
+.module-card.featured .module-num { color: rgba(200,136,26,0.2); font-size: 6rem; }
+.module-tag { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.module-tag::before { content: ''; width: 20px; height: 1px; background: currentColor; }
+.featured .module-tag { color: var(--gold-lt); }
+.module-name { font-family: var(--serif); font-size: 1.15rem; line-height: 1.35; color: var(--paper); margin-bottom: 16px; }
+.module-card.featured .module-name { font-size: 1.5rem; }
+.module-meta { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--mist); display: flex; gap: 20px; }
+.module-lessons { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); }
+.module-card.open .module-lessons { display: block; }
+.module-lessons li { font-size: 0.8rem; color: rgba(245,240,232,0.6); padding: 5px 0; padding-left: 16px; border-left: 1px solid rgba(200,136,26,0.3); margin-bottom: 6px; list-style: none; line-height: 1.4; }
+.cipher-callout {
+  margin-top: 40px;
+  background: linear-gradient(135deg, rgba(200,136,26,0.15) 0%, rgba(184,74,42,0.08) 100%);
+  border: 1px solid rgba(200,136,26,0.4);
+  padding: 40px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 40px; align-items: center;
+  position: relative; overflow: hidden;
+}
+.cipher-callout::before { content: '10'; position: absolute; right: -10px; top: -20px; font-family: var(--display); font-size: 18rem; color: rgba(200,136,26,0.05); line-height: 1; pointer-events: none; }
+.cipher-tag { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.cipher-tag::before { content: '●'; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity: 0.3; } }
+.cipher-title { font-family: var(--display); font-size: 3rem; line-height: 0.95; color: var(--paper); margin-bottom: 16px; }
+.cipher-desc { font-size: 0.9rem; line-height: 1.7; color: rgba(245,240,232,0.65); }
+.cipher-features { display: flex; flex-direction: column; gap: 14px; }
+.cipher-feat { display: flex; gap: 14px; align-items: flex-start; }
+.feat-icon { width: 36px; height: 36px; background: rgba(200,136,26,0.15); border: 1px solid rgba(200,136,26,0.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9rem; }
+.feat-text strong { display: block; font-family: var(--sans); font-weight: 600; font-size: 0.82rem; color: var(--paper); margin-bottom: 2px; }
+.feat-text span { font-size: 0.75rem; color: var(--mist); line-height: 1.4; }
+
+/* ── RUN THE CLAIM ───────────────────────────── */
+.run-the-claim {
+  background: var(--ink);
+  padding: 120px 64px;
+  position: relative;
+  overflow: hidden;
+}
+.run-the-claim::before {
+  content: 'EXECUTION';
+  position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
+  font-family: var(--display); font-size: 11rem;
+  color: rgba(255,255,255,0.02); white-space: nowrap; pointer-events: none;
+}
+.rtc-header { margin-bottom: 72px; }
+.rtc-title { font-family: var(--display); font-size: clamp(3rem,5vw,6.5rem); line-height: 0.9; color: var(--paper); margin-bottom: 16px; }
+.rtc-title span { color: var(--gold); }
+.rtc-subtitle { font-size: 1rem; line-height: 1.7; color: rgba(245,240,232,0.55); max-width: 640px; font-family: var(--serif); font-style: italic; }
+.rtc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-bottom: 48px;
+}
+.rtc-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 36px 28px;
+  transition: all 0.3s;
+  position: relative;
+}
+.rtc-card:hover { background: rgba(200,136,26,0.06); border-color: rgba(200,136,26,0.25); }
+.rtc-card-num {
+  font-family: var(--display); font-size: 4rem; line-height: 1;
+  color: rgba(255,255,255,0.05); margin-bottom: 12px;
+}
+.rtc-scenario {
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
+}
+.rtc-card-title { font-family: var(--serif); font-size: 1.1rem; color: var(--paper); margin-bottom: 12px; line-height: 1.3; }
+.rtc-card-body { font-size: 0.8rem; line-height: 1.65; color: var(--mist); margin-bottom: 16px; }
+.rtc-skills { display: flex; flex-wrap: wrap; gap: 6px; }
+.rtc-skill {
+  font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: rgba(245,240,232,0.5);
+  border: 1px solid rgba(255,255,255,0.1); padding: 3px 8px;
+}
+.rtc-banner {
+  background: rgba(200,136,26,0.08);
+  border: 1px solid rgba(200,136,26,0.3);
+  padding: 32px 40px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.rtc-banner-label { font-family: var(--display); font-size: 2rem; color: var(--gold); white-space: nowrap; flex-shrink: 0; }
+.rtc-banner-body { font-size: 0.88rem; line-height: 1.65; color: rgba(245,240,232,0.65); }
+.rtc-banner-body strong { color: var(--paper); }
+
+/* ── CIPHER VERIFIED ─────────────────────────── */
+.cipher-verified {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 120px 64px;
+  position: relative;
+  overflow: hidden;
+}
+.cipher-verified::before {
+  content: 'VERIFIED';
+  position: absolute; top: -20px; right: -40px;
+  font-family: var(--display); font-size: 12rem;
+  color: rgba(42,53,64,0.05); white-space: nowrap; pointer-events: none;
+}
+.cv-header { text-align: center; margin-bottom: 80px; }
+.cv-eyebrow { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--rust); margin-bottom: 16px; }
+.cv-title { font-family: var(--display); font-size: clamp(3rem,5vw,6rem); color: var(--slate); letter-spacing: 0.03em; line-height: 0.92; margin-bottom: 16px; }
+.cv-subtitle { font-family: var(--serif); font-style: italic; font-size: 1rem; color: #5a5a5a; max-width: 600px; margin: 0 auto; }
+.cv-levels {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid rgba(42,53,64,0.15);
+  margin-bottom: 48px;
+}
+.cv-level {
+  padding: 44px 32px;
+  border-right: 1px solid rgba(42,53,64,0.12);
+  position: relative;
+  transition: all 0.3s;
+}
+.cv-level:last-child { border-right: none; }
+.cv-level:hover { background: var(--cream); }
+.cv-level-num {
+  font-family: var(--display); font-size: 5rem; line-height: 1;
+  color: rgba(42,53,64,0.08); margin-bottom: 16px;
+}
+.cv-level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase;
+  margin-bottom: 16px;
+  padding: 5px 12px;
+}
+.badge-l1 { background: rgba(42,53,64,0.1); color: var(--slate); }
+.badge-l2 { background: rgba(184,74,42,0.12); color: var(--rust); }
+.badge-l3 { background: rgba(200,136,26,0.15); color: var(--gold); }
+.badge-l4 { background: var(--slate); color: var(--gold); }
+.cv-level-name { font-family: var(--serif); font-size: 1.2rem; font-weight: 700; color: var(--slate); margin-bottom: 12px; line-height: 1.2; }
+.cv-level-desc { font-size: 0.82rem; line-height: 1.65; color: #4a4a4a; margin-bottom: 20px; }
+.cv-gates { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.cv-gates li { font-size: 0.78rem; color: #3a3a3a; padding-left: 16px; position: relative; line-height: 1.4; }
+.cv-gates li::before { content: '◆'; position: absolute; left: 0; font-size: 0.45rem; color: var(--gold); top: 4px; }
+.cv-checkpoint {
+  position: absolute;
+  top: 16px; right: 16px;
+  font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--mist); background: rgba(42,53,64,0.07);
+  padding: 4px 8px;
+}
+.cv-callout {
+  background: var(--slate);
+  padding: 40px 48px;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+.cv-callout-icon { font-size: 3rem; flex-shrink: 0; }
+.cv-callout-text {}
+.cv-callout-text h4 { font-family: var(--display); font-size: 1.8rem; color: var(--gold); margin-bottom: 10px; letter-spacing: 0.05em; }
+.cv-callout-text p { font-size: 0.88rem; line-height: 1.7; color: rgba(245,240,232,0.65); }
+
+/* ── WHY DIFFERENT ───────────────────────────── */
+.why-different {
+  background: var(--slate);
+  padding: 120px 64px;
+  position: relative;
+  overflow: hidden;
+}
+.wd-header { margin-bottom: 64px; }
+.wd-title { font-family: var(--display); font-size: clamp(3rem,5vw,6rem); line-height: 0.9; color: var(--paper); margin-bottom: 12px; }
+.wd-title span { color: var(--rust); }
+.wd-subtitle { font-size: 0.95rem; line-height: 1.7; color: var(--mist); max-width: 600px; }
+.comparison-table { width: 100%; border-collapse: collapse; }
+.comparison-table thead tr th {
+  padding: 18px 24px;
+  font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+  text-align: left; border-bottom: 2px solid rgba(255,255,255,0.1);
+}
+.comparison-table thead th.col-topic { color: var(--mist); width: 22%; }
+.comparison-table thead th.col-them { color: rgba(245,240,232,0.35); background: rgba(255,255,255,0.02); width: 39%; }
+.comparison-table thead th.col-us { color: var(--gold); background: rgba(200,136,26,0.08); width: 39%; border-left: 2px solid rgba(200,136,26,0.3); }
+.comparison-table tbody tr { border-bottom: 1px solid rgba(255,255,255,0.06); transition: background 0.2s; }
+.comparison-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+.comparison-table tbody td {
+  padding: 22px 24px;
+  vertical-align: top;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+.comparison-table td.col-topic {
+  font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--mist);
+  border-right: 1px solid rgba(255,255,255,0.06);
+  padding-top: 26px;
+}
+.comparison-table td.col-them {
+  color: rgba(245,240,232,0.35);
+  background: rgba(255,255,255,0.01);
+}
+.comparison-table td.col-us {
+  color: rgba(245,240,232,0.88);
+  background: rgba(200,136,26,0.05);
+  border-left: 2px solid rgba(200,136,26,0.25);
+}
+.col-us-tick { color: var(--gold); font-weight: 700; margin-right: 6px; }
+.col-them-x { color: rgba(255,255,255,0.2); margin-right: 6px; }
+
+/* ── OUTCOMES ────────────────────────────────── */
+.outcomes {
+  background: var(--ink);
+  padding: 120px 64px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 80px;
+  align-items: start;
+  position: relative;
+}
+.outcomes-left { position: sticky; top: 100px; }
+.outcomes-title { font-family: var(--display); font-size: clamp(3rem, 4vw, 5rem); line-height: 0.92; margin-bottom: 24px; color: var(--paper); }
+.outcomes-body { font-size: 0.9rem; line-height: 1.7; color: var(--mist); margin-bottom: 36px; }
+.outcomes-grid { display: flex; flex-direction: column; gap: 0; }
+.outcome-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.outcome-item { padding: 28px 32px; border-right: 1px solid rgba(255,255,255,0.06); display: flex; gap: 18px; align-items: flex-start; transition: background 0.25s; }
+.outcome-item:last-child { border-right: none; }
+.outcome-item:hover { background: rgba(200,136,26,0.05); }
+.outcome-check { width: 28px; height: 28px; border: 1px solid var(--gold); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--gold); margin-top: 2px; }
+.outcome-text { font-size: 0.88rem; line-height: 1.55; color: rgba(245,240,232,0.75); }
+
+/* ── PLATFORMS ──────────────────────────────── */
+.platforms { background: var(--cream); color: var(--ink); padding: 100px 64px; }
+.platforms-header { text-align: center; margin-bottom: 72px; }
+.platforms-eyebrow { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--rust); margin-bottom: 16px; }
+.platforms-title { font-family: var(--display); font-size: clamp(2.5rem, 4vw, 5rem); color: var(--slate); letter-spacing: 0.03em; line-height: 0.95; }
+.platforms-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 60px; }
+.platform-card { border: 1px solid rgba(42,53,64,0.15); padding: 44px 36px; background: var(--paper); position: relative; transition: all 0.3s; }
+.platform-card:hover { border-color: var(--gold); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.12); }
+.platform-badge { position: absolute; top: -12px; left: 32px; background: var(--gold); color: var(--ink); font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 12px; }
+.platform-name { font-family: var(--display); font-size: 2.8rem; color: var(--slate); letter-spacing: 0.03em; margin-bottom: 8px; line-height: 1; }
+.platform-sub { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mist); margin-bottom: 24px; }
+.platform-desc { font-size: 0.85rem; line-height: 1.65; color: #3a3a3a; margin-bottom: 24px; }
+.platform-bullets { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.platform-bullets li { font-size: 0.8rem; color: #4a4a4a; padding-left: 16px; position: relative; line-height: 1.4; }
+.platform-bullets li::before { content: '—'; position: absolute; left: 0; color: var(--gold); font-weight: bold; }
+
+/* ── CAPSTONE ────────────────────────────────── */
+.capstone {
+  background: var(--ink);
+  padding: 120px 64px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.capstone::after { content: 'CAPSTONE'; position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%); font-family: var(--display); font-size: 12rem; color: rgba(255,255,255,0.02); white-space: nowrap; pointer-events: none; }
+.capstone-title { font-family: var(--display); font-size: clamp(2.5rem, 4vw, 5rem); line-height: 0.92; color: var(--paper); margin-bottom: 28px; }
+.capstone-title span { color: var(--gold); display: block; }
+.capstone-body { font-size: 0.95rem; line-height: 1.75; color: rgba(245,240,232,0.65); margin-bottom: 40px; }
+.mock-claim { border: 1px solid rgba(200,136,26,0.3); background: rgba(255,255,255,0.02); padding: 36px; position: relative; }
+.mock-claim-header { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(200,136,26,0.2); display: flex; justify-content: space-between; align-items: center; }
+.mock-field { display: grid; grid-template-columns: 1fr 2fr; gap: 8px 20px; margin-bottom: 8px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.mock-field:last-of-type { border-bottom: none; }
+.mock-key { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mist); padding-top: 1px; }
+.mock-val { font-size: 0.82rem; color: var(--paper); }
+.damage-list { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(200,136,26,0.2); }
+.damage-list-title { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+.damage-list ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.damage-list li { font-size: 0.78rem; color: rgba(245,240,232,0.6); padding-left: 14px; position: relative; line-height: 1.4; }
+.damage-list li::before { content: '◇'; position: absolute; left: 0; font-size: 0.55rem; color: var(--rust); top: 1px; }
+
+/* ── BONUS ───────────────────────────────────── */
+.bonus { background: var(--rust); padding: 100px 64px; position: relative; overflow: hidden; }
+.bonus::before { content: '$1,000'; position: absolute; right: -60px; top: 50%; transform: translateY(-50%); font-family: var(--display); font-size: 18rem; color: rgba(0,0,0,0.1); white-space: nowrap; pointer-events: none; line-height: 1; }
+.bonus-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.bonus-eyebrow { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.65); margin-bottom: 16px; }
+.bonus-title { font-family: var(--display); font-size: clamp(3rem, 5vw, 6rem); line-height: 0.9; color: var(--white); margin-bottom: 24px; }
+.bonus-desc { font-size: 1rem; line-height: 1.7; color: rgba(255,255,255,0.75); }
+.bonus-weeks { display: flex; flex-direction: column; gap: 4px; }
+.bonus-week { background: rgba(0,0,0,0.15); padding: 20px 24px; display: flex; gap: 20px; align-items: flex-start; transition: background 0.2s; cursor: pointer; }
+.bonus-week:hover { background: rgba(0,0,0,0.3); }
+.week-label { font-family: var(--display); font-size: 2.2rem; color: rgba(255,255,255,0.3); line-height: 1; flex-shrink: 0; width: 80px; }
+.week-title { font-weight: 700; font-size: 0.88rem; color: var(--white); margin-bottom: 4px; }
+.week-tasks { font-size: 0.78rem; color: rgba(255,255,255,0.6); line-height: 1.5; }
+
+/* ── PRICING ─────────────────────────────────── */
+.pricing { background: var(--paper); color: var(--ink); padding: 120px 64px; text-align: center; }
+.pricing-eyebrow { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--rust); margin-bottom: 16px; }
+.pricing-title { font-family: var(--display); font-size: clamp(3rem, 5vw, 6rem); color: var(--slate); letter-spacing: 0.03em; line-height: 0.92; margin-bottom: 16px; }
+.pricing-sub { font-family: var(--serif); font-size: 1rem; font-style: italic; color: #5a5a5a; margin-bottom: 72px; }
+.pricing-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto 64px; }
+.price-card { border: 1px solid rgba(42,53,64,0.15); padding: 44px 36px; background: var(--white); text-align: left; position: relative; transition: all 0.3s; }
+.price-card.featured { background: var(--slate); border-color: var(--gold); }
+.price-card:hover { transform: translateY(-4px); box-shadow: 0 24px 64px rgba(0,0,0,0.1); }
+.price-popular { position: absolute; top: -12px; right: 24px; background: var(--gold); color: var(--ink); font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 14px; }
+.price-tier { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mist); margin-bottom: 16px; }
+.price-card.featured .price-tier { color: var(--gold); }
+.price-amount { font-family: var(--display); font-size: 5rem; line-height: 0.95; color: var(--slate); margin-bottom: 4px; }
+.price-card.featured .price-amount { color: var(--paper); }
+.price-period { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--mist); margin-bottom: 28px; }
+.price-features { list-style: none; display: flex; flex-direction: column; gap: 11px; margin-bottom: 36px; }
+.price-features li { font-size: 0.83rem; color: #3a3a3a; padding-left: 18px; position: relative; line-height: 1.4; }
+.price-card.featured .price-features li { color: rgba(245,240,232,0.7); }
+.price-features li::before { content: '✓'; position: absolute; left: 0; color: var(--gold); font-weight: bold; }
+.btn-enroll { width: 100%; padding: 14px; background: var(--slate); color: var(--paper); font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; border: none; cursor: pointer; transition: all 0.2s; }
+.price-card.featured .btn-enroll { background: var(--gold); color: var(--ink); }
+.btn-enroll:hover { opacity: 0.85; }
+
+/* ── FAQ ─────────────────────────────────────── */
+.faq-title { font-family: var(--display); font-size: clamp(2.5rem, 4vw, 5rem); color: var(--paper); text-align: center; margin-bottom: 64px; letter-spacing: 0.03em; }
+.faq-item { border-bottom: 1px solid rgba(255,255,255,0.08); cursor: pointer; overflow: hidden; }
+.faq-question { padding: 24px 0; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.faq-q-text { font-family: var(--serif); font-size: 1rem; color: var(--paper); line-height: 1.4; }
+.faq-toggle { width: 32px; height: 32px; border: 1px solid rgba(200,136,26,0.4); flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1.2rem; transition: transform 0.25s; }
+.faq-item.open .faq-toggle { transform: rotate(45deg); }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.25s; }
+.faq-item.open .faq-answer { max-height: 400px; padding-bottom: 24px; }
+.faq-a-text { font-size: 0.88rem; line-height: 1.75; color: var(--mist); }
+
+/* ── FOOTER ──────────────────────────────────── */
+footer { background: #070707; padding: 60px 64px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; align-items: start; border-top: 1px solid rgba(200,136,26,0.15); }
+.footer-brand {}
+.footer-logo { font-family: var(--display); font-size: 1.8rem; color: var(--gold); letter-spacing: 0.05em; margin-bottom: 12px; }
+.footer-logo span { color: var(--paper); }
+.footer-tagline { font-family: var(--serif); font-style: italic; font-size: 0.82rem; color: var(--mist); line-height: 1.5; }
+.footer-col-title { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { font-size: 0.82rem; color: var(--mist); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--paper); }
+.footer-bottom { background: #040404; padding: 20px 64px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.04); }
+.footer-copy { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(138,155,171,0.5); }
+
+/* ── LEARN WHAT MATTERS ──────────────────────── */
+.learn-matters {
+  background: var(--cream);
+  color: var(--ink);
+  padding: 100px 64px;
+}
+.lm-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.lm-left {}
+.lm-headline {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 3vw, 3.2rem);
+  line-height: 1.2;
+  color: var(--slate);
+  margin-bottom: 24px;
+}
+.lm-headline em { font-style: italic; color: var(--rust); }
+.lm-body { font-size: 0.95rem; line-height: 1.8; color: #3a3a3a; margin-bottom: 16px; }
+.lm-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.lm-row {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(42,53,64,0.1);
+}
+.lm-row:last-child { border-bottom: none; }
+.lm-check {
+  width: 36px; height: 36px;
+  background: var(--slate); color: var(--gold);
+  font-size: 0.85rem; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 2px;
+}
+.lm-row-title { font-weight: 700; font-size: 0.9rem; color: var(--slate); margin-bottom: 4px; }
+.lm-row-body { font-size: 0.82rem; line-height: 1.55; color: #5a5a5a; }
+
+/* ── FIELD REALITY ───────────────────────────── */
+.field-reality {
+  background: var(--slate);
+  padding: 100px 64px;
+  position: relative;
+  overflow: hidden;
+}
+.field-reality::before {
+  content: 'FIELD';
+  position: absolute; top: -10px; right: -30px;
+  font-family: var(--display); font-size: 14rem;
+  color: rgba(255,255,255,0.02); letter-spacing: 0.05em;
+  white-space: nowrap; pointer-events: none; line-height: 1;
+}
+.fr-header { margin-bottom: 56px; }
+.fr-title { font-family: var(--display); font-size: clamp(3rem,5vw,6rem); line-height: 0.9; color: var(--paper); margin-bottom: 14px; }
+.fr-title span { color: var(--gold); }
+.fr-subtitle { font-family: var(--serif); font-style: italic; font-size: 1rem; color: rgba(245,240,232,0.55); max-width: 580px; }
+.fr-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+}
+.fr-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 32px 28px;
+  transition: all 0.3s;
+  position: relative;
+}
+.fr-card:hover { background: rgba(200,136,26,0.07); border-color: rgba(200,136,26,0.25); }
+.fr-card::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: var(--gold); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.35s ease;
+}
+.fr-card:hover::before { transform: scaleX(1); }
+.fr-env {
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
+}
+.fr-card-title { font-family: var(--serif); font-size: 1rem; color: var(--paper); margin-bottom: 10px; line-height: 1.3; }
+.fr-card-body { font-size: 0.78rem; line-height: 1.6; color: var(--mist); }
+.fr-reality-bar {
+  margin-top: 40px;
+  background: rgba(200,136,26,0.08);
+  border: 1px solid rgba(200,136,26,0.25);
+  padding: 28px 36px;
+  display: flex; gap: 24px; align-items: center;
+}
+.fr-bar-label {
+  font-family: var(--display); font-size: 1.5rem; color: var(--gold);
+  white-space: nowrap; flex-shrink: 0; line-height: 1.1;
+}
+.fr-bar-body { font-size: 0.86rem; line-height: 1.65; color: rgba(245,240,232,0.65); }
+.fr-bar-body strong { color: var(--paper); }
+
+/* ── YOUR FIRST CLAIM ────────────────────────── */
+.first-claim {
+  background: var(--ink);
+  padding: 100px 64px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.fc-left {}
+.fc-title { font-family: var(--display); font-size: clamp(3rem,4.5vw,5.5rem); line-height: 0.92; color: var(--paper); margin-bottom: 24px; }
+.fc-title span { color: var(--gold); display: block; }
+.fc-body { font-size: 0.95rem; line-height: 1.8; color: rgba(245,240,232,0.62); margin-bottom: 16px; }
+.fc-right {}
+.fc-moments {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fc-moment {
+  display: flex; gap: 20px; align-items: flex-start;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 22px 24px;
+  transition: all 0.25s;
+}
+.fc-moment:hover { background: rgba(200,136,26,0.06); border-color: rgba(200,136,26,0.2); }
+.fc-moment-num {
+  font-family: var(--display); font-size: 2.2rem; color: rgba(200,136,26,0.3);
+  line-height: 1; flex-shrink: 0; width: 40px;
+}
+.fc-moment-title { font-weight: 700; font-size: 0.88rem; color: var(--paper); margin-bottom: 4px; }
+.fc-moment-body { font-size: 0.78rem; line-height: 1.5; color: var(--mist); }
+
+/* ── SINGLE PRICE ────────────────────────────── */
+.single-price-wrap {
+  max-width: 680px;
+  margin: 0 auto 64px;
+}
+.single-price-card {
+  border: 1px solid rgba(200,136,26,0.5);
+  background: var(--slate);
+  padding: 60px 56px;
+  text-align: left;
+  position: relative;
+}
+.sp-top-badge {
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  background: var(--gold); color: var(--ink);
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em;
+  text-transform: uppercase; padding: 6px 20px; white-space: nowrap;
+}
+.sp-tier { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+.sp-price-row { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 8px; }
+.sp-amount { font-family: var(--display); font-size: 7rem; line-height: 0.9; color: var(--paper); }
+.sp-or { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mist); padding-bottom: 12px; }
+.sp-split { font-family: var(--display); font-size: 2.8rem; line-height: 0.9; color: var(--gold); padding-bottom: 8px; }
+.sp-period { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--mist); margin-bottom: 36px; }
+.sp-divider { height: 1px; background: rgba(255,255,255,0.08); margin-bottom: 32px; }
+.sp-everything { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+.sp-features {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px 32px; margin-bottom: 40px;
+  list-style: none;
+}
+.sp-features li { font-size: 0.83rem; color: rgba(245,240,232,0.75); padding-left: 18px; position: relative; line-height: 1.4; }
+.sp-features li::before { content: '✓'; position: absolute; left: 0; color: var(--gold); font-weight: bold; }
+.sp-cta {
+  width: 100%; padding: 18px;
+  background: var(--gold); color: var(--ink);
+  font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.14em;
+  text-transform: uppercase; border: none; cursor: pointer;
+  font-weight: 600; transition: all 0.2s; margin-bottom: 16px;
+  display: block; text-align: center;
+}
+.sp-cta:hover { background: var(--gold-lt); transform: translateY(-2px); }
+.sp-klarna {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--mist);
+}
+.sp-klarna-badge {
+  background: rgba(255,178,208,0.15); border: 1px solid rgba(255,178,208,0.25);
+  color: #ffb2d0; padding: 3px 10px;
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+}
+
+/* ── RESPONSIVE ─────────────────────────────── */
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .intro, .outcomes, .capstone, .bonus-inner, .no-overwhelm, .cv-callout { grid-template-columns: 1fr; gap: 60px; }
+  .modules-grid, .rtc-grid { grid-template-columns: 1fr 1fr; }
+  .module-card.featured { grid-column: span 2; }
+  .cv-levels { grid-template-columns: 1fr 1fr; }
+  .platforms-row, .pricing-cards { grid-template-columns: 1fr; }
+  .outcome-row, .oc-row { grid-template-columns: 1fr; }
+  .pipeline-steps { grid-template-columns: 1fr 1fr; }
+  .pipeline-steps::before { display: none; }
+  .pipeline-note { grid-template-columns: 1fr; }
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .lm-inner, .first-claim { grid-template-columns: 1fr; gap: 48px; }
+  .fr-grid { grid-template-columns: 1fr 1fr; }
+  .sp-features { grid-template-columns: 1fr; }
+  .sp-price-row { flex-wrap: wrap; }
+  .single-price-card { padding: 48px 28px; }
+  .hero-left, .platforms, .outcomes, .capstone, .bonus, .modules, .intro,
+  .pricing, .pipeline, .no-overwhelm, .run-the-claim, .cipher-verified,
+  .why-different, .learn-matters, .field-reality, .first-claim { padding-left: 28px; padding-right: 28px; }
+  footer { grid-template-columns: 1fr; padding: 40px 28px; }
+  .footer-bottom { padding: 16px 28px; flex-direction: column; gap: 8px; }
+  .comparison-table thead th, .comparison-table tbody td { padding: 14px 12px; font-size: 0.78rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">CLAIM CIPHER <span>TRAINING</span></a>
+  <ul class="nav-links">
+    <li><a href="#pipeline">The Path</a></li>
+    <li><a href="#modules">Training</a></li>
+    <li><a href="#verified">Get Verified</a></li>
+    <li><a href="#why">Why Different</a></li>
+    <li><a href="#pricing">Start Now</a></li>
+  </ul>
+  <a href="#pricing" class="nav-cta">Get Cipher Verified — $597</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Structured Execution System · Built for the Field</div>
+    <h1 class="hero-title">
+      <span class="line-dim">Learn Auto Damage Estimating —</span>
+      <span class="line-gold">From Zero to Your</span>
+      <span class="line-rust">First Paid Claim</span>
+    </h1>
+
+    <div class="hero-not-a-course">
+      ⚠ No experience required. <span>·</span> No license required to start learning.
+    </div>
+
+    <p class="hero-sub">No experience. No fluff. Just the exact system used to complete real claim files.</p>
+
+    <div class="hero-actions">
+      <a href="#pricing" class="btn-primary">Start Your Path to Paid Claims</a>
+      <a href="#pipeline" class="btn-ghost">See the System</a>
+    </div>
+    <p style="font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;color:rgba(245,240,232,0.45);margin-top:-44px;margin-bottom:32px;">You won't just learn — you will run real claim scenarios before touching a live file.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-number">11</span>
+        <span class="stat-label">Execution Modules</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">4</span>
+        <span class="stat-label">Verified Levels</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">3</span>
+        <span class="stat-label">Live Platforms</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">$597</span>
+        <span class="stat-label">Full System Access</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-bg-img"></div>
+    <div class="hero-grid"><div class="grid-lines"></div></div>
+    <div class="hero-float hf1">Cipher Verified · Job Ready</div>
+    <div class="hero-float hf2">CCC ONE · Estimating Platform Training</div>
+    <div class="hero-float hf3">Performance Checkpoints · Not Completion Badges</div>
+    <div class="hero-badge">
+      <div class="badge-ring">
+        <div class="badge-inner">
+          <span>CV</span>
+          <span>Cipher Verified Estimator</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item">Train Like You're Already Working</span>
+    <span class="ticker-item">Performance Over Completion</span>
+    <span class="ticker-item">Cipher Verified Readiness</span>
+    <span class="ticker-item">Real Claim Workflows</span>
+    <span class="ticker-item">No Overwhelm. Just Progress.</span>
+    <span class="ticker-item">CCC ONE · Industry-Standard Platform</span>
+    <span class="ticker-item">From Beginner to Paid Estimator</span>
+    <span class="ticker-item">IA Firm Positioning Included</span>
+    <span class="ticker-item">Train Like You're Already Working</span>
+    <span class="ticker-item">Performance Over Completion</span>
+    <span class="ticker-item">Cipher Verified Readiness</span>
+    <span class="ticker-item">Real Claim Workflows</span>
+    <span class="ticker-item">No Overwhelm. Just Progress.</span>
+    <span class="ticker-item">CCC ONE · Industry-Standard Platform</span>
+    <span class="ticker-item">From Beginner to Paid Estimator</span>
+    <span class="ticker-item">IA Firm Positioning Included</span>
+  </div>
+</div>
+
+<!-- START HERE — WHAT HAPPENS WHEN YOU JOIN -->
+<section style="background:var(--cream);padding:72px 64px;border-bottom:3px solid var(--gold);">
+  <div style="max-width:900px;margin:0 auto;">
+    <div class="section-label gold" style="margin-bottom:24px;">Getting Started</div>
+    <h2 style="font-family:var(--display);font-size:clamp(2.4rem,4vw,4rem);color:var(--slate);letter-spacing:0.04em;margin-bottom:40px;line-height:0.95;">START HERE — WHAT HAPPENS WHEN YOU JOIN</h2>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:20px;">
+      <li style="display:flex;gap:20px;align-items:flex-start;padding:20px 24px;background:var(--paper);border-left:4px solid var(--gold);">
+        <span style="font-family:var(--display);font-size:1.8rem;color:var(--gold);line-height:1;flex-shrink:0;">◆</span>
+        <span style="font-family:var(--sans);font-size:1rem;line-height:1.7;color:var(--slate);font-weight:500;">Learn how a real claim actually works</span>
+      </li>
+      <li style="display:flex;gap:20px;align-items:flex-start;padding:20px 24px;background:var(--paper);border-left:4px solid var(--gold);">
+        <span style="font-family:var(--display);font-size:1.8rem;color:var(--gold);line-height:1;flex-shrink:0;">◆</span>
+        <span style="font-family:var(--sans);font-size:1rem;line-height:1.7;color:var(--slate);font-weight:500;">Practice with real-world scenarios (not theory)</span>
+      </li>
+      <li style="display:flex;gap:20px;align-items:flex-start;padding:20px 24px;background:var(--paper);border-left:4px solid var(--gold);">
+        <span style="font-family:var(--display);font-size:1.8rem;color:var(--gold);line-height:1;flex-shrink:0;">◆</span>
+        <span style="font-family:var(--sans);font-size:1rem;line-height:1.7;color:var(--slate);font-weight:500;">Complete a full claim file step-by-step</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- INTRO / WHAT THIS IS -->
+<section class="intro">
+  <div class="intro-left reveal">
+    <div class="section-label">What This Actually Is</div>
+    <h2 class="intro-headline">Other platforms give you content. <em>We give you a path to operational.</em></h2>
+    <p class="intro-body">Most training programs hand you a login, a stack of videos, and a certificate when you click "complete." Then you're on your own trying to figure out how to actually get work. That's not a system. That's a library.</p>
+    <p class="intro-body">Claim Cipher Training is structured around one question: <strong>are you ready to handle a real claim?</strong> Every module has a performance checkpoint. You don't just learn how to write an estimate — you write one, submit it, and it gets evaluated. You progress when you're ready. Not when a timer says so.</p>
+    <div class="not-a-course-block">
+      <p><strong>This is not passive learning. This is structured execution.</strong> Most programs show you information. This system trains you to actually perform the work.</p>
+    </div>
+  </div>
+  <div class="intro-right reveal">
+    <ul class="who-list">
+      <li class="who-item">
+        <span class="who-num">01</span>
+        <div class="who-text">
+          <strong>Complete Beginners — Zero Experience Welcome</strong>
+          <span>You don't need a claims background. We start at the foundation: vehicle anatomy, damage zones, what a claim actually is. Every skill is built in sequence from scratch.</span>
+        </div>
+      </li>
+      <li class="who-item">
+        <span class="who-num">02</span>
+        <div class="who-text">
+          <strong>Body Shop & Auto Industry Professionals</strong>
+          <span>You already know vehicles. Now learn to speak carrier language, use estimating platforms, and convert your field knowledge into a 1099 income stream.</span>
+        </div>
+      </li>
+      <li class="who-item">
+        <span class="who-num">03</span>
+        <div class="who-text">
+          <strong>People Who've Tried Other Programs and Got Stuck</strong>
+          <span>If you've been in a video library for months without a clear next step — this is what was missing. A structured execution path with real checkpoints.</span>
+        </div>
+      </li>
+      <li class="who-item">
+        <span class="who-num">04</span>
+        <div class="who-text">
+          <strong>Aspiring Firm Operators</strong>
+          <span>Want to build a micro-appraisal firm and dispatch other appraisers? The Firm Builder path covers operational systems, dispatch workflows, and team-ready infrastructure.</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══ HOW YOU BECOME JOB-READY — THE PIPELINE ═══ -->
+<section class="pipeline" id="pipeline">
+  <div style="text-align:center;margin-bottom:48px;">
+    <p style="font-family:var(--serif);font-size:1.05rem;line-height:1.75;color:rgba(245,240,232,0.75);font-style:italic;max-width:680px;margin:0 auto;border-left:3px solid var(--gold);padding-left:20px;text-align:left;">By the end of this system, you will be able to accept and complete a real claim file.</p>
+  </div>
+  <div class="pipeline-header reveal">
+    <div style="font-family:var(--mono);font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;text-align:center;">Your Path · Step by Step</div>
+    <h2 class="pipeline-title">HOW YOU BECOME<br>JOB-READY</h2>
+    <p class="pipeline-subtitle">This is not a timeline. It is a pipeline. You move forward by demonstrating readiness, not by watching enough content.</p>
+  </div>
+
+  <div class="pipeline-steps reveal">
+    <div class="pipeline-step">
+      <div class="step-node">
+        <span class="step-num">01</span>
+        <span class="step-icon">🔑</span>
+      </div>
+      <div class="step-name">JOIN</div>
+      <div class="step-desc">Enroll, set up your Claim Cipher account, and complete your appraiser profile. Day one infrastructure — not day thirty.</div>
+      <div class="step-tag">Access Unlocked</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-node">
+        <span class="step-num">02</span>
+        <span class="step-icon">📋</span>
+      </div>
+      <div class="step-name">TRAIN</div>
+      <div class="step-desc">Work through structured execution modules. No skipping ahead without demonstrated competency in prior stages.</div>
+      <div class="step-tag">Sequenced Curriculum</div>
+    </div>
+    <div class="pipeline-step active">
+      <div class="step-node">
+        <span class="step-num">03</span>
+        <span class="step-icon">⚙️</span>
+      </div>
+      <div class="step-name">PRACTICE</div>
+      <div class="step-desc">Run simulated claims end-to-end. Real assignments in a controlled environment. You'll make mistakes here — not on your first live claim.</div>
+      <div class="step-tag">Live Simulations</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-node">
+        <span class="step-num">04</span>
+        <span class="step-icon">🏅</span>
+      </div>
+      <div class="step-name">GET VERIFIED</div>
+      <div class="step-desc">Pass the Cipher Verified evaluation. Your work is reviewed against real carrier standards. Verification is earned, not given.</div>
+      <div class="step-tag">Cipher Verified™</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-node">
+        <span class="step-num">05</span>
+        <span class="step-icon">💼</span>
+      </div>
+      <div class="step-name">GET POSITIONED</div>
+      <div class="step-desc">Submit your verified profile to IA firms and carriers with a real readiness signal. Not just a certificate — a validated capability statement.</div>
+      <div class="step-tag">Work-Ready Launch</div>
+    </div>
+  </div>
+
+  <div class="pipeline-note reveal">
+    <div class="pipeline-note-item">
+      <div class="pn-icon">📵</div>
+      <div class="pn-text">
+        <strong>No Guessing What's Next</strong>
+        <span>Every step in the pipeline is explicitly defined. You always know exactly where you are and what you need to do to advance.</span>
+      </div>
+    </div>
+    <div class="pipeline-note-item">
+      <div class="pn-icon">🔒</div>
+      <div class="pn-text">
+        <strong>Checkpoints Are Real</strong>
+        <span>Progression gates require demonstrated performance. You don't unlock the next stage by clicking play — you unlock it by showing your work.</span>
+      </div>
+    </div>
+    <div class="pipeline-note-item">
+      <div class="pn-icon">⚡</div>
+      <div class="pn-text">
+        <strong>Fastest Legitimate Path</strong>
+        <span>No wasted modules. No off-topic content. Every lesson connects directly to something you'll do on your first live claim.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ NO OVERWHELM ═══ -->
+<section class="no-overwhelm" id="progress">
+  <div class="no-overwhelm-left reveal">
+    <div class="section-label">Intentional Design</div>
+    <h2 class="no-overwhelm-title">NO<br><span>OVERWHELM.</span><br>JUST PROGRESS.</h2>
+    <p class="no-overwhelm-body">The number one reason people fail in online training is getting buried in content they don't know how to use. We designed around that problem from day one. You won't find hundreds of videos to binge through. You'll find a structured sequence — each lesson smaller than the last one you earned.</p>
+    <p class="no-overwhelm-body">You're not here to become a student. You're here to become an appraiser. Those are different goals, and they require a different kind of training.</p>
+    <a href="#pricing" class="btn-primary" style="background:var(--gold);display:inline-block;margin-top:12px;">Train Like You're Already Working</a>
+  </div>
+  <div class="no-overwhelm-right reveal">
+    <div class="oc-header">
+      <div class="oc-header-them">Most Programs</div>
+      <div class="oc-header-us">Claim Cipher Training</div>
+    </div>
+    <div class="overwhelm-comparison">
+      <div class="oc-row">
+        <div class="oc-them"><span class="oc-icon">✗</span> 200+ videos with no clear sequence — you pick what to watch</div>
+        <div class="oc-us"><span class="oc-icon" style="color:var(--gold)">✓</span> Structured pipeline — each stage unlocks the next</div>
+      </div>
+      <div class="oc-row">
+        <div class="oc-them"><span class="oc-icon">✗</span> Complete at your own pace with no accountability</div>
+        <div class="oc-us"><span class="oc-icon" style="color:var(--gold)">✓</span> Performance checkpoints keep you moving and honest</div>
+      </div>
+      <div class="oc-row">
+        <div class="oc-them"><span class="oc-icon">✗</span> Certificate issued for course completion — not demonstrated skill</div>
+        <div class="oc-us"><span class="oc-icon" style="color:var(--gold)">✓</span> Cipher Verified badge issued for proven readiness</div>
+      </div>
+      <div class="oc-row">
+        <div class="oc-them"><span class="oc-icon">✗</span> Content ends — you figure out how to apply it alone</div>
+        <div class="oc-us"><span class="oc-icon" style="color:var(--gold)">✓</span> Training flows directly into claim simulation and IA positioning</div>
+      </div>
+      <div class="oc-row">
+        <div class="oc-them"><span class="oc-icon">✗</span> Generic tools advice — go find the software yourself</div>
+        <div class="oc-us"><span class="oc-icon" style="color:var(--gold)">✓</span> Built-in dispatch tool trained alongside the curriculum</div>
+      </div>
+      <div class="oc-row">
+        <div class="oc-them"><span class="oc-icon">✗</span> You leave not knowing if you're actually ready</div>
+        <div class="oc-us"><span class="oc-icon" style="color:var(--gold)">✓</span> You leave Cipher Verified — readiness is validated, not assumed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LEARN WHAT ACTUALLY MATTERS ═══ -->
+<section class="learn-matters" id="learnmatters">
+  <div class="lm-inner">
+    <div class="lm-left reveal">
+      <div class="section-label">Focused by Design</div>
+      <h2 class="lm-headline">You don't need to master all of CCC. <em>You need to complete claims.</em></h2>
+      <p class="lm-body">Estimating platforms like CCC ONE have hundreds of features. Carriers have thick guidelines. The industry has decades of accumulated jargon. None of that matters until you know which part actually applies to getting a claim written, submitted, and paid.</p>
+      <p class="lm-body">This system teaches you the core workflows that appear on every standard collision claim. The operations you'll write on day one. The procedures you'll repeat on day one hundred. Everything else is context — and context comes from experience, not more content.</p>
+    </div>
+    <div class="lm-right reveal">
+      <div class="lm-row">
+        <div class="lm-check">✓</div>
+        <div>
+          <div class="lm-row-title">The 20% of CCC ONE that covers 80% of your claims</div>
+          <div class="lm-row-body">VIN entry, damage zone navigation, R&R vs. repair operations, refinish procedures, and carrier submission. That's your daily toolkit — and that's what we drill.</div>
+        </div>
+      </div>
+      <div class="lm-row">
+        <div class="lm-check">✓</div>
+        <div>
+          <div class="lm-row-title">Included vs. not-included — the one rule that prevents callbacks</div>
+          <div class="lm-row-body">The most common beginner mistake is charging separately for operations the database already includes. We teach this as a checkpoint — not a footnote.</div>
+        </div>
+      </div>
+      <div class="lm-row">
+        <div class="lm-check">✓</div>
+        <div>
+          <div class="lm-row-title">Platform fluency, not platform mastery</div>
+          <div class="lm-row-body">You don't need to know everything CCC can do. You need to move from a claim assignment to a submitted estimate without friction. That's what this trains.</div>
+        </div>
+      </div>
+      <div class="lm-row">
+        <div class="lm-check">✓</div>
+        <div>
+          <div class="lm-row-title">Advanced topics unlock when you need them, not before</div>
+          <div class="lm-row-body">ADAS calibration, aluminum repair procedures, complex subrogation — real, but not day-one problems. The curriculum sequences learning to match when things actually come up in the field.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="modules" id="modules">
+  <div class="section-header">
+    <h2 class="section-title reveal">EXECUTION<br>CURRICULUM</h2>
+    <div class="section-count reveal">11 Modules · Sequential<br>Each Requires Prior Completion<br>Performance-Gated Progression</div>
+  </div>
+
+  <div class="modules-grid">
+    <div class="module-card reveal" onclick="this.classList.toggle('open')">
+      <span class="module-num">01</span>
+      <div class="module-tag">Foundation</div>
+      <h3 class="module-name">The Industry: Roles, Rules & Real Opportunity</h3>
+      <div class="module-meta"><span>3–4 hrs</span><span>Beginner</span></div>
+      <ul class="module-lessons">
+        <li>Appraiser vs. adjuster — legal and operational differences</li>
+        <li>The IA firm and TPA ecosystem — who pays you and how</li>
+        <li>State licensing map and how to enter non-licensing states immediately</li>
+        <li>Income structure: per-claim fees, desk fees, total loss fees</li>
+        <li>Checkpoint: Map your target state market and identify 5 IA firms to apply to</li>
+      </ul>
+    </div>
+    <div class="module-card reveal" onclick="this.classList.toggle('open')">
+      <span class="module-num">02</span>
+      <div class="module-tag">Vehicle Knowledge</div>
+      <h3 class="module-name">Vehicle Anatomy & Damage Identification</h3>
+      <div class="module-meta"><span>4–5 hrs</span><span>Beginner</span></div>
+      <ul class="module-lessons">
+        <li>Structural zones: front, rear, sides, roof, undercarriage</li>
+        <li>Primary, secondary, and hidden damage — how to recognize each</li>
+        <li>Repairable vs. non-repairable damage thresholds</li>
+        <li>OEM, aftermarket, and LKQ parts: when each applies</li>
+        <li>Checkpoint: Walk any vehicle, name every component in writing — no notes</li>
+      </ul>
+    </div>
+    <div class="module-card reveal" onclick="this.classList.toggle('open')">
+      <span class="module-num">03</span>
+      <div class="module-tag">Claims Process</div>
+      <h3 class="module-name">The Auto Claims Process — End to End</h3>
+      <div class="module-meta"><span>3 hrs</span><span>Beginner</span></div>
+      <ul class="module-lessons">
+        <li>FNOL through claim closure — the 10-stage lifecycle</li>
+        <li>How assignments reach you and what they contain</li>
+        <li>Cycle time: the metric that defines your reputation</li>
+        <li>Your complete submission deliverable package</li>
+        <li>Checkpoint: Build a full claim timeline from a mock assignment packet</li>
+      </ul>
+    </div>
+    <div class="module-card reveal" onclick="this.classList.toggle('open')">
+      <span class="module-num">04</span>
+      <div class="module-tag">Core Estimating</div>
+      <h3 class="module-name">Estimating Fundamentals: Labor, Parts & Procedures</h3>
+      <div class="module-meta"><span>6–8 hrs</span><span>Intermediate</span></div>
+      <ul class="module-lessons">
+        <li>Labor time methodology and database logic — included vs. not included</li>
+        <li>CCC ONE full platform workflow: VIN to submission</li>
+        <li>Refinish: blend, two-stage, tri-coat — written correctly</li>
+        <li>Checkpoint: Submit a graded practice estimate in CCC ONE</li>
+      </ul>
+    </div>
+    <div class="module-card reveal" onclick="this.classList.toggle('open')">
+      <span class="module-num">05</span>
+      <div class="module-tag">Field Execution</div>
+      <h3 class="module-name">Photo Documentation & Field Inspection</h3>
+      <div class="module-meta"><span>3–4 hrs</span><span>Beginner</span></div>
+      <ul class="module-lessons">
+        <li>30–50 photo standard protocol — sequence, categories, requirements</li>
+        <li>Photo quality standards: resolution, lighting, focus, angle</li>
+        <li>12-step walk-around inspection sequence</li>
+        <li>Flagging hidden damage in your submission notes</li>
+        <li>Checkpoint: Submit a full photo set from a vehicle walk-around — reviewed for completeness</li>
+      </ul>
+    </div>
+    <div class="module-card reveal" onclick="this.classList.toggle('open')">
+      <span class="module-num">06</span>
+      <div class="module-tag">Industry Knowledge</div>
+      <h3 class="module-name">Insurance Terminology & Policy Basics</h3>
+      <div class="module-meta"><span>3 hrs</span><span>Beginner</span></div>
+      <ul class="module-lessons">
+        <li>Coverage types: collision, comprehensive, liability, UM/UIM</li>
+        <li>ACV, deductible, subrogation, betterment — in your own words</li>
+        <li>How coverage type changes your scope of work</li>
+        <li>Total loss threshold basics and when to flag</li>
+        <li>Checkpoint: Identify coverage type and scope from 5 mock claim scenarios</li>
+      </ul>
+    </div>
+    <div class="module-card reveal" onclick="this.classList.toggle('open')">
+      <span class="module-num">07</span>
+      <div class="module-tag">Valuation</div>
+      <h3 class="module-name">Total Loss Evaluation</h3>
+      <div class="module-meta"><span>3 hrs</span><span>Intermediate</span></div>
+      <ul class="module-lessons">
+        <li>Economic, constructive, and safety total loss — three different calls</li>
+        <li>ACV valuation tools: CCC Valuescope</li>
+        <li>Visual indicators of total loss during field inspection</li>
+        <li>How to write and submit a professional total loss flag</li>
+        <li>Checkpoint: Submit a total loss flag narrative for a mock vehicle — graded against carrier standards</li>
+      </ul>
+    </div>
+    <div class="module-card reveal" onclick="this.classList.toggle('open')">
+      <span class="module-num">08</span>
+      <div class="module-tag">Advanced Practice</div>
+      <h3 class="module-name">Supplements, Negotiation & Body Shop Relations</h3>
+      <div class="module-meta"><span>4 hrs</span><span>Intermediate</span></div>
+      <ul class="module-lessons">
+        <li>What a supplement is and when the evidence warrants one</li>
+        <li>No photo, no supplement — the standard that protects you</li>
+        <li>Negotiating parts type disputes with documentation, not opinions</li>
+        <li>Resolving included operations disagreements using database evidence</li>
+        <li>Checkpoint: Write a supplement request and a parts dispute response — both graded</li>
+      </ul>
+    </div>
+    <div class="module-card reveal" onclick="this.classList.toggle('open')">
+      <span class="module-num">09</span>
+      <div class="module-tag">Professional Skills</div>
+      <h3 class="module-name">Customer Communication & Professionalism</h3>
+      <div class="module-meta"><span>2–3 hrs</span><span>All Levels</span></div>
+      <ul class="module-lessons">
+        <li>What you can and cannot say — and why the line matters</li>
+        <li>4-step de-escalation framework for difficult customers</li>
+        <li>Written communication standards that hold up in disputes</li>
+        <li>Scripts for every common interaction: scheduling, delays, completion, disputes</li>
+        <li>Checkpoint: Role-play two customer scenarios using the de-escalation framework</li>
+      </ul>
+    </div>
+    <div class="module-card reveal" onclick="this.classList.toggle('open')">
+      <span class="module-num">11</span>
+      <div class="module-tag">Business Launch</div>
+      <h3 class="module-name">Launching Your Independent Appraiser Career</h3>
+      <div class="module-meta"><span>4 hrs</span><span>All Levels</span></div>
+      <ul class="module-lessons">
+        <li>LLC setup, EIN, E&O insurance — done in week one</li>
+        <li>Complete appraiser packet for IA firm applications</li>
+        <li>Target IA firm roster: who to apply to and how to follow up</li>
+        <li>LinkedIn: how to build a profile that carriers and IA firms actually read</li>
+        <li>Multi-state licensing via NIPR.com — expand your market without guessing</li>
+        <li>Checkpoint: Submit 3 IA firm applications with complete packets before this module closes</li>
+      </ul>
+    </div>
+
+    <!-- Module 10 — Cipher Dispatch -->
+    <div class="module-card featured reveal" onclick="this.classList.toggle('open')">
+      <span class="module-num">10</span>
+      <div class="module-tag">Operational Toolkit</div>
+      <h3 class="module-name">Claim Cipher & Cipher Dispatch: Operate Like a Firm on Day One</h3>
+      <div class="module-meta"><span>4–5 hrs</span><span>All Levels</span></div>
+      <ul class="module-lessons">
+        <li>Claims queue management — status workflow from assignment to close</li>
+        <li>Automated cycle time tracking and AT RISK alerts before the carrier notices</li>
+        <li>Two-way SMS tied to each claim thread — full communication audit trail</li>
+        <li>Supplement logging with auto-generated system messages</li>
+        <li>Public claim tracker portal — eliminates "where is my claim?" calls</li>
+        <li>TPA firm directory for roster application tracking</li>
+        <li>Script template library for every common scenario</li>
+        <li>Checkpoint: Build a complete mock claim in Cipher Dispatch — full lifecycle, all timestamps</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cipher-callout reveal">
+    <div>
+      <div class="cipher-tag">Module 10 — Built Into the Training</div>
+      <h3 class="cipher-title">CLAIM CIPHER<br>IS YOUR TOOL</h3>
+      <p class="cipher-desc">Most programs teach you skills, then send you off to find tools. In Claim Cipher Training, the software you'll use professionally is the same software you train on. By the time you take your first live assignment, you already know the system. That's not an accident — it's the point.</p>
+    </div>
+    <div class="cipher-features">
+      <div class="cipher-feat">
+        <div class="feat-icon">⏱</div>
+        <div class="feat-text">
+          <strong>Cycle Time Management</strong>
+          <span>AT RISK flags surface before your carrier notices. You act first, every time.</span>
+        </div>
+      </div>
+      <div class="cipher-feat">
+        <div class="feat-icon">💬</div>
+        <div class="feat-text">
+          <strong>Two-Way SMS — Documented</strong>
+          <span>Every customer message tied to the claim. No lost texts. Full audit trail.</span>
+        </div>
+      </div>
+      <div class="cipher-feat">
+        <div class="feat-icon">📋</div>
+        <div class="feat-text">
+          <strong>Supplement Logging</strong>
+          <span>One-click supplement requests with auto-timestamped system messages.</span>
+        </div>
+      </div>
+      <div class="cipher-feat">
+        <div class="feat-icon">🌐</div>
+        <div class="feat-text">
+          <strong>Public Claim Status Portal</strong>
+          <span>Customers check their own claim status. You answer fewer calls and look more professional.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ RUN THE CLAIM — REAL WORLD TRAINING ═══ -->
+<section class="run-the-claim" id="runtheclaim">
+  <div class="rtc-header reveal">
+    <p style="font-family:var(--serif);font-size:1.05rem;line-height:1.75;color:var(--gold);font-style:italic;margin-bottom:24px;">Before you ever touch a real claim — you will run one here first.</p>
+    <div style="font-family:var(--mono);font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;">Real World Training</div>
+    <h2 class="rtc-title">RUN THE <span>CLAIM.</span></h2>
+    <p class="rtc-subtitle">You won't just study the claims process. You will run it — end to end — before your first live assignment. Every scenario below is trained, not just described.</p>
+    <p style="font-family:var(--mono);font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,232,0.5);margin-top:20px;">You won't guess. You won't freeze. You will already know what to do.</p>
+  </div>
+
+  <div class="rtc-grid reveal">
+    <div class="rtc-card">
+      <div class="rtc-card-num">01</div>
+      <div class="rtc-scenario">Customer Interaction</div>
+      <h3 class="rtc-card-title">The Policyholder Standing Next to the Vehicle</h3>
+      <p class="rtc-card-body">From arrival introduction through inspection completion — how to set expectations, what to say when they're upset about parts, and how to close the interaction so they're confident without making promises you can't keep.</p>
+      <div class="rtc-skills">
+        <span class="rtc-skill">De-escalation</span>
+        <span class="rtc-skill">SMS Confirmation</span>
+        <span class="rtc-skill">Expectation Setting</span>
+        <span class="rtc-skill">Scope Boundaries</span>
+      </div>
+    </div>
+
+    <div class="rtc-card">
+      <div class="rtc-card-num">02</div>
+      <div class="rtc-scenario">Shop Communication</div>
+      <h3 class="rtc-card-title">The Body Shop That Disagrees With Your Estimate</h3>
+      <p class="rtc-card-body">Parts type disputes, included operations arguments, labor rate disagreements — you'll train through each one with specific language, documentation requirements, and escalation triggers. Negotiation here is evidence-based, not emotional.</p>
+      <div class="rtc-skills">
+        <span class="rtc-skill">Parts Disputes</span>
+        <span class="rtc-skill">Database Evidence</span>
+        <span class="rtc-skill">Supplement Review</span>
+        <span class="rtc-skill">Written Response</span>
+      </div>
+    </div>
+
+    <div class="rtc-card">
+      <div class="rtc-card-num">03</div>
+      <div class="rtc-scenario">Tow Yard Inspections</div>
+      <h3 class="rtc-card-title">Vehicles You Can't Move and Can Barely Get Under</h3>
+      <p class="rtc-card-body">Tow yard inspections are a different animal — vehicles may be stacked, inaccessible from multiple angles, and conditions are poor. Learn the adapted inspection protocol, how to document what you can't reach, and when to flag for additional access.</p>
+      <div class="rtc-skills">
+        <span class="rtc-skill">Adapted Protocol</span>
+        <span class="rtc-skill">Access Documentation</span>
+        <span class="rtc-skill">Photo Constraints</span>
+        <span class="rtc-skill">Condition Notes</span>
+      </div>
+    </div>
+
+    <div class="rtc-card">
+      <div class="rtc-card-num">04</div>
+      <div class="rtc-scenario">Total Loss Handling</div>
+      <h3 class="rtc-card-title">When the Car Isn't Worth Fixing</h3>
+      <p class="rtc-card-body">Recognizing total loss on arrival. Photographing a vehicle for a total loss flag — not a repair estimate. Communicating total loss potential professionally to the IA firm. What you do, what you don't do, and how to write the flag that holds up to carrier review.</p>
+      <div class="rtc-skills">
+        <span class="rtc-skill">TL Flag Writing</span>
+        <span class="rtc-skill">ACV Context</span>
+        <span class="rtc-skill">Photo Evidence</span>
+        <span class="rtc-skill">Carrier Communication</span>
+      </div>
+    </div>
+
+    <div class="rtc-card">
+      <div class="rtc-card-num">05</div>
+      <div class="rtc-scenario">Supplement Discovery</div>
+      <h3 class="rtc-card-title">The Shop Found More Damage During Teardown</h3>
+      <p class="rtc-card-body">How to evaluate a shop's supplement request, what evidence you need before approving anything, how to write the supplement submission when you find it yourself, and how to log it in your dispatch system so nothing falls through the cracks.</p>
+      <div class="rtc-skills">
+        <span class="rtc-skill">Evidence Review</span>
+        <span class="rtc-skill">Supplement Writing</span>
+        <span class="rtc-skill">Dispatch Logging</span>
+        <span class="rtc-skill">Carrier Notification</span>
+      </div>
+    </div>
+
+    <div class="rtc-card">
+      <div class="rtc-card-num">06</div>
+      <div class="rtc-scenario">Full Claim Lifecycle</div>
+      <h3 class="rtc-card-title">Assignment to Closure — The Full Run</h3>
+      <p class="rtc-card-body">The capstone simulation runs you through a complete claim: accept assignment, schedule inspection, photograph the vehicle, write the estimate, handle a supplement, communicate with all parties, and close the file. This is your dress rehearsal for the real thing.</p>
+      <div class="rtc-skills">
+        <span class="rtc-skill">All Prior Skills</span>
+        <span class="rtc-skill">Cipher Dispatch</span>
+        <span class="rtc-skill">Platform Submission</span>
+        <span class="rtc-skill">Cipher Verified Gate</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="rtc-banner reveal">
+    <div class="rtc-banner-label">THE RULE</div>
+    <div class="rtc-banner-body">
+      <strong>Every scenario above is trained before you encounter it live.</strong> There is no scenario in the field you haven't already run in this program. That's the difference between training that builds confidence and training that just builds content libraries.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FIELD REALITY ═══ -->
+<section class="field-reality" id="fieldreality">
+  <div class="fr-header reveal">
+    <div style="font-family:var(--mono);font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;">Real Environments. Real Preparation.</div>
+    <h2 class="fr-title">FIELD <span>REALITY</span></h2>
+    <p class="fr-subtitle">The job doesn't always happen in a clean body shop with good lighting and a cooperative customer. You'll know that going in.</p>
+  </div>
+
+  <div class="fr-grid reveal">
+    <div class="fr-card">
+      <div class="fr-env">Body Shop</div>
+      <h3 class="fr-card-title">Working Around Active Repairs</h3>
+      <p class="fr-card-body">Shops are busy. Vehicles are partially disassembled. Estimators may want to talk while you're working. You'll train how to inspect efficiently, document what you need, and maintain professionalism without slowing down the shop's operation.</p>
+    </div>
+    <div class="fr-card">
+      <div class="fr-env">Tow Yard</div>
+      <h3 class="fr-card-title">Limited Access, Full Documentation</h3>
+      <p class="fr-card-body">Vehicles may be stacked, muddy, or locked. You can't always get the angle you want. We cover the adapted inspection protocol — what to photograph when access is limited, how to note what you couldn't reach, and when to request better access before submitting.</p>
+    </div>
+    <div class="fr-card">
+      <div class="fr-env">Customer Driveway</div>
+      <h3 class="fr-card-title">The Policyholder Is Watching</h3>
+      <p class="fr-card-body">Some inspections happen at the owner's home with them standing five feet away. You'll know exactly what to say on arrival, how to manage expectations during the walk-around, and how to close the interaction cleanly without overpromising anything.</p>
+    </div>
+    <div class="fr-card">
+      <div class="fr-env">Remote / Desk</div>
+      <h3 class="fr-card-title">Working Off Photos and Notes Alone</h3>
+      <p class="fr-card-body">Desk review assignments come with a photo set and a basic damage description. No vehicle in front of you. You'll train how to evaluate remote documentation, identify what's missing, and write a defensible review from what you actually have.</p>
+    </div>
+  </div>
+
+  <div class="fr-reality-bar reveal">
+    <div class="fr-bar-label">THE POINT</div>
+    <div class="fr-bar-body"><strong>None of these environments will surprise you.</strong> Other programs prepare you for the textbook version of this job. We prepare you for the version that actually exists — where conditions are imperfect, people are impatient, and you still need to submit a clean, complete, defensible claim package.</div>
+  </div>
+</section>
+
+<!-- ═══ CIPHER VERIFIED SYSTEM ═══ -->
+<section class="cipher-verified" id="verified">
+  <div class="cv-header reveal">
+    <div class="cv-eyebrow">The Readiness Validation System</div>
+    <h2 class="cv-title">CIPHER<br>VERIFIED™</h2>
+    <p class="cv-subtitle">Completion badges tell employers you watched content. Cipher Verified tells them you've demonstrated the skills to handle a real claim from day one.</p>
+  </div>
+
+  <div class="cv-levels reveal">
+    <div class="cv-level">
+      <div class="cv-checkpoint">Checkpoint 1</div>
+      <div class="cv-level-num">L1</div>
+      <div class="cv-level-badge badge-l1">◈ Foundation</div>
+      <h3 class="cv-level-name">Cipher Foundation</h3>
+      <p class="cv-level-desc">You understand the industry, the players, the claims lifecycle, and what your role is. You've demonstrated basic vehicle knowledge and correctly identified coverage types from mock scenarios.</p>
+      <ul class="cv-gates">
+        <li>Vehicle anatomy assessment passed</li>
+        <li>Claims lifecycle timeline submitted</li>
+        <li>Coverage identification: 5/5 scenarios correct</li>
+        <li>Target market and IA firm list completed</li>
+      </ul>
+    </div>
+
+    <div class="cv-level">
+      <div class="cv-checkpoint">Checkpoint 2</div>
+      <div class="cv-level-num">L2</div>
+      <div class="cv-level-badge badge-l2">◈ Estimator</div>
+      <h3 class="cv-level-name">Cipher Estimator</h3>
+      <p class="cv-level-desc">You can write a complete, defensible estimate on any standard collision claim. You've submitted a graded practice estimate in CCC ONE and handled a supplement scenario correctly.</p>
+      <ul class="cv-gates">
+        <li>CCC ONE estimate: graded and approved</li>
+        <li>Supplement request written and submitted</li>
+        <li>Photo set reviewed: complete and professional</li>
+      </ul>
+    </div>
+
+    <div class="cv-level">
+      <div class="cv-checkpoint">Checkpoint 3</div>
+      <div class="cv-level-num">L3</div>
+      <div class="cv-level-badge badge-l3">◈ Field Ready</div>
+      <h3 class="cv-level-name">Cipher Field Ready</h3>
+      <p class="cv-level-desc">You've run claim simulations that cover customer interaction, shop communication, tow yard conditions, and total loss recognition. Your communication is documented, professional, and would hold up to carrier review.</p>
+      <ul class="cv-gates">
+        <li>Customer interaction simulation: passed</li>
+        <li>Shop dispute response: submitted and approved</li>
+        <li>Total loss flag: written and reviewed</li>
+        <li>Tow yard adapted protocol: demonstrated</li>
+        <li>Full Cipher Dispatch claim lifecycle: completed</li>
+      </ul>
+    </div>
+
+    <div class="cv-level">
+      <div class="cv-checkpoint">Final Gate</div>
+      <div class="cv-level-num">L4</div>
+      <div class="cv-level-badge badge-l4">◈ Verified</div>
+      <h3 class="cv-level-name">Cipher Verified™</h3>
+      <p class="cv-level-desc">You've completed the full capstone claim — assignment to closure. Your estimate, photo documentation, supplement handling, and claim communications have all been reviewed against real carrier standards. You are job-ready.</p>
+      <ul class="cv-gates">
+        <li>Capstone claim: submitted and graded (75+ required)</li>
+        <li>CCC ONE platform proficiency: confirmed</li>
+        <li>Business setup: LLC, E&O, appraiser packet ready</li>
+        <li>IA firm applications: 3 submitted and confirmed</li>
+        <li>Cipher Verified™ designation issued</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cv-callout reveal">
+    <div class="cv-callout-icon">🏅</div>
+    <div class="cv-callout-text">
+      <h4>Cipher Verified™ Is a Positioning Signal — Not a Participation Trophy</h4>
+      <p>When you apply to an IA firm's roster with Cipher Verified on your profile, you're telling them something specific: you've been evaluated against real-world claim standards and cleared each gate. That's a different conversation than "I finished a course." That's a conversation about capacity — and capacity is what gets you on rosters.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ YOUR FIRST CLAIM ═══ -->
+<section class="first-claim" id="firstclaim">
+  <div class="fc-left reveal">
+    <div class="section-label">Before You Go Live</div>
+    <h2 class="fc-title">YOUR<br><span>FIRST CLAIM</span><br>WITHOUT THE FEAR.</h2>
+    <p class="fc-body">The anxiety of a first assignment isn't about capability — it's about unfamiliarity. Not knowing what to expect when you pull up to the shop. Not knowing what to say when the customer asks questions you haven't been asked before. Not knowing if your estimate will hold up.</p>
+    <p class="fc-body">By the time you accept your first real assignment, every moment in that claim will feel like something you've already done. Because you have. The capstone simulation is your first claim. The one that counts just gets logged in Cipher Dispatch instead of graded on a rubric.</p>
+  </div>
+  <div class="fc-right reveal">
+    <div class="fc-moments">
+      <div class="fc-moment">
+        <div class="fc-moment-num">01</div>
+        <div>
+          <div class="fc-moment-title">Pulling Up to the Location</div>
+          <div class="fc-moment-body">You've done the walk-around. You know the sequence. You know what photos are required before you take your first step around the vehicle.</div>
+        </div>
+      </div>
+      <div class="fc-moment">
+        <div class="fc-moment-num">02</div>
+        <div>
+          <div class="fc-moment-title">The Customer Asks About Coverage</div>
+          <div class="fc-moment-body">You know exactly what to say — and what not to say. The de-escalation framework is trained, not just described. You've done this scenario already.</div>
+        </div>
+      </div>
+      <div class="fc-moment">
+        <div class="fc-moment-num">03</div>
+        <div>
+          <div class="fc-moment-title">Opening the Estimating Platform</div>
+          <div class="fc-moment-body">CCC ONE is the platform — you've trained on it and submitted a graded estimate. The workflow is familiar. You're not learning the software on a live claim.</div>
+        </div>
+      </div>
+      <div class="fc-moment">
+        <div class="fc-moment-num">04</div>
+        <div>
+          <div class="fc-moment-title">Submitting and Getting Paid</div>
+          <div class="fc-moment-body">Your estimate is complete, your photos are organized, your claim is logged in Cipher Dispatch. You invoice. That's not a milestone — that's Tuesday.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WHY THIS IS DIFFERENT ═══ -->
+<section class="why-different" id="why">
+  <div class="wd-header reveal">
+    <div style="font-family:var(--mono);font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;">Direct Comparison</div>
+    <h2 class="wd-title">WHY THIS IS <span>DIFFERENT</span></h2>
+    <p class="wd-subtitle">This is not a knock on other programs. It is a clear-eyed look at what different programs are actually built to do — and what you need to get to paid.</p>
+  </div>
+
+  <div class="reveal">
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th class="col-topic">Category</th>
+        <th class="col-them">Other Programs</th>
+        <th class="col-us">Claim Cipher Training</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-topic">Approach</td>
+        <td class="col-them"><span class="col-them-x">—</span> Content-first. Watch, learn, figure out the rest.</td>
+        <td class="col-us"><span class="col-us-tick">✓</span> Execution-first. Every lesson has a deliverable. You do the work.</td>
+      </tr>
+      <tr>
+        <td class="col-topic">Progression</td>
+        <td class="col-them"><span class="col-them-x">—</span> Self-paced with no gates. Skip anything, move at will.</td>
+        <td class="col-us"><span class="col-us-tick">✓</span> Performance-gated. You advance by demonstrating competency, not by finishing content.</td>
+      </tr>
+      <tr>
+        <td class="col-topic">Readiness Signal</td>
+        <td class="col-them"><span class="col-them-x">—</span> Certificate of completion. Tells employers you logged hours.</td>
+        <td class="col-us"><span class="col-us-tick">✓</span> Cipher Verified™ designation. Tells employers you've been evaluated against claim standards and cleared.</td>
+      </tr>
+      <tr>
+        <td class="col-topic">Real-World Practice</td>
+        <td class="col-them"><span class="col-them-x">—</span> Theory and examples. Real practice starts after you're hired.</td>
+        <td class="col-us"><span class="col-us-tick">✓</span> End-to-end claim simulations. You run the full lifecycle before your first live assignment.</td>
+      </tr>
+      <tr>
+        <td class="col-topic">Platform Training</td>
+        <td class="col-them"><span class="col-them-x">—</span> Overview of CCC ONE or one platform. Demo not always included.</td>
+        <td class="col-us"><span class="col-us-tick">✓</span> Graded, submitted practice estimate in CCC ONE — the platform carriers use most.</td>
+      </tr>
+      <tr>
+        <td class="col-topic">Operational Tools</td>
+        <td class="col-them"><span class="col-them-x">—</span> Generic advice: use a spreadsheet, keep notes organized.</td>
+        <td class="col-us"><span class="col-us-tick">✓</span> You train on Cipher Dispatch — the same tool you'll operate with on live claims. No onboarding delay.</td>
+      </tr>
+      <tr>
+        <td class="col-topic">Customer & Shop Scenarios</td>
+        <td class="col-them"><span class="col-them-x">—</span> Scripts mentioned. Role-play and live simulation uncommon.</td>
+        <td class="col-us"><span class="col-us-tick">✓</span> Customer interaction, tow yard, shop disputes, total loss — all trained as simulation before you go live.</td>
+      </tr>
+      <tr>
+        <td class="col-topic">IA Firm Positioning</td>
+        <td class="col-them"><span class="col-them-x">—</span> Access to job boards or firm lists after course completion.</td>
+        <td class="col-us"><span class="col-us-tick">✓</span> You submit 3 IA firm applications with a complete packet as a course checkpoint — before you finish.</td>
+      </tr>
+      <tr>
+        <td class="col-topic">Content Volume</td>
+        <td class="col-them"><span class="col-them-x">—</span> Hundreds of videos. You determine what's relevant to your situation.</td>
+        <td class="col-us"><span class="col-us-tick">✓</span> Focused, sequenced curriculum. No filler. Every module connects to a real task on a real claim.</td>
+      </tr>
+      <tr>
+        <td class="col-topic">When You Feel Ready</td>
+        <td class="col-them"><span class="col-them-x">—</span> When you decide you're ready. No external validation.</td>
+        <td class="col-us"><span class="col-us-tick">✓</span> When you're Cipher Verified. A system evaluated your readiness. Not a feeling — a result.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div style="margin-top:48px;background:rgba(200,136,26,0.08);border:1px solid rgba(200,136,26,0.25);padding:32px 40px;display:flex;gap:32px;align-items:center;" class="reveal">
+    <div style="font-family:var(--display);font-size:1.8rem;color:var(--gold);flex-shrink:0;line-height:1.1;">THE<br>BOTTOM LINE</div>
+    <div style="font-size:0.9rem;line-height:1.7;color:rgba(245,240,232,0.7);">Other programs are built to educate you. <strong style="color:var(--paper);">Claim Cipher Training is built to make you operational.</strong> If you want a credential, other programs do that. If you want paid claims, this is the path. We're not competing for who can provide the most content — we're competing on one metric: how fast can we get you to your first invoice.</div>
+  </div>
+</section>
+
+<!-- OUTCOMES -->
+<section class="outcomes" id="learn">
+  <div class="outcomes-left reveal">
+    <div class="section-label">What You Leave With</div>
+    <h2 class="outcomes-title">VERIFIED<br>SKILLS.</h2>
+    <p class="outcomes-body">Every item below is a demonstrated competency — validated by a checkpoint — not a topic covered in a video. When you reach Cipher Verified, these are things you have done, not things you have watched.</p>
+    <a href="#pricing" class="btn-primary" style="background: var(--gold);">Get Cipher Verified</a>
+  </div>
+  <div class="outcomes-grid">
+    <div class="outcome-row">
+      <div class="outcome-item reveal">
+        <div class="outcome-check">✓</div>
+        <span class="outcome-text">Inspect any damaged vehicle and document it to carrier submission standards</span>
+      </div>
+      <div class="outcome-item reveal">
+        <div class="outcome-check">✓</div>
+        <span class="outcome-text">Write and submit a complete estimate in CCC ONE — the platform carriers require most</span>
+      </div>
+    </div>
+    <div class="outcome-row">
+      <div class="outcome-item reveal">
+        <div class="outcome-check">✓</div>
+        <span class="outcome-text">Evaluate a vehicle for total loss and submit a professional flag that holds to carrier review</span>
+      </div>
+      <div class="outcome-item reveal">
+        <div class="outcome-check">✓</div>
+        <span class="outcome-text">Write and submit supplement requests with photo evidence — the first time, correctly</span>
+      </div>
+    </div>
+    <div class="outcome-row">
+      <div class="outcome-item reveal">
+        <div class="outcome-check">✓</div>
+        <span class="outcome-text">Navigate customer, shop, and carrier communications without overstepping your authority</span>
+      </div>
+      <div class="outcome-item reveal">
+        <div class="outcome-check">✓</div>
+        <span class="outcome-text">Operate Cipher Dispatch end-to-end — the same tool you'll use on live assignments</span>
+      </div>
+    </div>
+    <div class="outcome-row">
+      <div class="outcome-item reveal">
+        <div class="outcome-check">✓</div>
+        <span class="outcome-text">Apply to IA firm rosters with a complete packet and a Cipher Verified credential</span>
+      </div>
+      <div class="outcome-item reveal">
+        <div class="outcome-check">✓</div>
+        <span class="outcome-text">Execute your first paid claim without calling someone to ask what to do next</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORMS -->
+<section class="platforms" id="platforms">
+  <div class="platforms-header reveal">
+    <div class="platforms-eyebrow">The Platform Carriers Require Most</div>
+    <h2 class="platforms-title">THE PLATFORM<br>YOU TRAIN ON</h2>
+  </div>
+  <div class="platforms-row" style="grid-template-columns:1fr;">
+    <div class="platform-card reveal">
+      <div class="platform-badge">Required Training</div>
+      <h3 class="platform-name">CCC ONE</h3>
+      <div class="platform-sub">CCC Intelligent Solutions</div>
+      <p class="platform-desc">The dominant estimating platform in the U.S. market. You don't just learn how it works — you submit a graded estimate in CCC ONE as a Cipher Estimator checkpoint requirement.</p>
+      <ul class="platform-bullets">
+        <li>VIN-based vehicle data auto-population</li>
+        <li>Visual diagram zone navigation</li>
+        <li>OEM, aftermarket, and LKQ parts pricing</li>
+        <li>Included/not-included database notes — the most common beginner error</li>
+        <li>Photo attachment and carrier submission workflow</li>
+        <li>Free demo account: cccone.com/training</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CAPSTONE -->
+<section class="capstone" id="capstone">
+  <div class="capstone-left reveal">
+    <div class="section-label">The Final Gate</div>
+    <h2 class="capstone-title">THE<br><span>CAPSTONE</span><br>CLAIM</h2>
+    <p class="capstone-body">The capstone is not a test you study for. It is a claim you run — end to end — with no help. You receive the assignment packet, inspect the documented damage, write a complete estimate, handle a supplement scenario, document your communications, and close the file. Every deliverable is reviewed against the same standards a carrier uses.</p>
+    <p class="capstone-body" style="margin-bottom:24px;">Score 75 or higher and you earn Cipher Verified™. You are not certified because you finished something. You are verified because you demonstrated you can do it.</p>
+    <div style="display:flex;gap:32px;flex-wrap:wrap;">
+      <div class="stat"><span class="stat-number" style="color:var(--gold);">100</span><span class="stat-label">Point Rubric</span></div>
+      <div class="stat"><span class="stat-number" style="color:var(--gold);">75</span><span class="stat-label">To Get Verified</span></div>
+      <div class="stat"><span class="stat-number" style="color:var(--gold);">4</span><span class="stat-label">Graded Deliverables</span></div>
+    </div>
+  </div>
+  <div class="capstone-right reveal">
+    <div class="mock-claim">
+      <div class="mock-claim-header">
+        <span>Capstone Claim Assignment</span>
+        <span style="color:var(--rust);">MOCK-2024-00741</span>
+      </div>
+      <div class="mock-field">
+        <span class="mock-key">Insured</span>
+        <span class="mock-val">James R. Patterson</span>
+      </div>
+      <div class="mock-field">
+        <span class="mock-key">Vehicle</span>
+        <span class="mock-val">2021 Honda CR-V EX-L AWD</span>
+      </div>
+      <div class="mock-field">
+        <span class="mock-key">Coverage</span>
+        <span class="mock-val">Collision — $500 Deductible</span>
+      </div>
+      <div class="mock-field">
+        <span class="mock-key">Carrier</span>
+        <span class="mock-val">Progressive Insurance</span>
+      </div>
+      <div class="mock-field">
+        <span class="mock-key">Loss Type</span>
+        <span class="mock-val">Driver front corner — highway speed impact</span>
+      </div>
+      <div class="mock-field">
+        <span class="mock-key">ACV</span>
+        <span class="mock-val">$28,400 (TL threshold calculation required)</span>
+      </div>
+      <div class="damage-list">
+        <div class="damage-list-title">Documented Damage — You Write the Estimate</div>
+        <ul>
+          <li>Hood — buckled at driver front corner</li>
+          <li>Driver front fender — buckled with crease</li>
+          <li>Front bumper cover + reinforcement</li>
+          <li>Driver headlamp assembly — shattered</li>
+          <li>Radiator support — bent driver side</li>
+          <li>A/C condenser — bent fins, potential refrigerant leak</li>
+          <li>Windshield — impact crack from lower driver corner</li>
+          <li>Front subframe — hidden damage flag required</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BONUS -->
+<section class="bonus">
+  <div class="bonus-inner">
+    <div class="bonus-left reveal">
+      <div class="bonus-eyebrow">Included with Full System Access</div>
+      <h2 class="bonus-title">YOUR FIRST<br>$1,000<br>SPRINT</h2>
+      <p class="bonus-desc">A week-by-week execution plan that runs parallel to your final training modules. Not something you do after you graduate — something you start before you're done. By week four, you could already have your first paid assignment in Cipher Dispatch.</p>
+    </div>
+    <div class="bonus-right reveal">
+      <div class="bonus-weeks">
+        <div class="bonus-week">
+          <span class="week-label">W1</span>
+          <div>
+            <div class="week-title">Infrastructure First</div>
+            <div class="week-tasks">Form LLC · EIN · Business bank account · E&O insurance quote and bind · First 5 IA firm applications submitted with complete packets</div>
+          </div>
+        </div>
+        <div class="bonus-week">
+          <span class="week-label">W2</span>
+          <div>
+            <div class="week-title">Platform Competency</div>
+            <div class="week-tasks">All 3 practice estimates submitted · LinkedIn profile published · Cipher Dispatch claim built · 5 additional IA firm applications</div>
+          </div>
+        </div>
+        <div class="bonus-week">
+          <span class="week-label">W3</span>
+          <div>
+            <div class="week-title">Get in the Room</div>
+            <div class="week-tasks">Follow up every application · Accept onboarding calls same day · Capstone claim submitted · Cipher Verified status earned</div>
+          </div>
+        </div>
+        <div class="bonus-week">
+          <span class="week-label">W4</span>
+          <div>
+            <div class="week-title">First Assignment Protocol</div>
+            <div class="week-tasks">Accept immediately · Inspect within 24 hrs · Submit same day · Log in Cipher Dispatch · Invoice on submission day</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="pricing-eyebrow">One Price. Everything Included.</div>
+  <h2 class="pricing-title reveal">NO TIERS.<br>NO LOCKED CONTENT.</h2>
+  <p class="pricing-sub reveal">Every person who joins gets the full system. All 11 modules, all checkpoints, all tools, the community, and Cipher Verified evaluation — from day one.</p>
+
+  <div class="single-price-wrap reveal">
+    <div class="single-price-card">
+      <div class="sp-top-badge">Full System Access · Everything Included</div>
+      <div class="sp-tier">Claim Cipher Training — Complete System</div>
+      <p style="font-family:var(--serif);font-size:1rem;font-style:italic;color:var(--gold-lt);margin-bottom:20px;line-height:1.6;">One completed claim can cover this entire investment.</p>
+      <div class="sp-price-row">
+        <div class="sp-amount">$597</div>
+        <div class="sp-or">or</div>
+        <div class="sp-split">3 × $199</div>
+      </div>
+      <div class="sp-period">One-time payment · Lifetime access · Split pay available via Klarna</div>
+      <p style="font-family:var(--mono);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,240,232,0.45);margin-bottom:28px;">This isn't a course you "watch." This is a skill you can get paid for.</p>
+      <div class="sp-divider"></div>
+      <div class="sp-everything">Everything in the system — no exceptions</div>
+      <ul class="sp-features">
+        <li>All 11 execution modules</li>
+        <li>All 4 Cipher Verified levels</li>
+        <li>Graded capstone claim review</li>
+        <li>Cipher Verified™ designation on completion</li>
+        <li>CCC ONE platform training</li>
+        <li>Graded practice estimate — CCC ONE</li>
+        <li>Run the Claim simulations (all 6 scenarios)</li>
+        <li>Field Reality preparation modules</li>
+        <li>Cipher Dispatch — full access during training</li>
+        <li>$1,000 first-income sprint guide</li>
+        <li>Communication scripts library</li>
+        <li>IA firm application roster + tracker</li>
+        <li>Appraiser bio and packet review</li>
+        <li>Private Circle community access</li>
+        <li>30-day support for claim questions</li>
+        <li>Multi-state licensing roadmap</li>
+      </ul>
+      <a href="#" class="sp-cta">Start Your Path to Paid Claims →</a>
+      <div class="sp-klarna">
+        <span>Split into 3 payments with</span>
+        <span class="sp-klarna-badge">Klarna</span>
+        <span>· No interest · No credit check</span>
+      </div>
+    </div>
+  </div>
+
+  <p style="font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;color:#888;text-transform:uppercase;">30-day money-back guarantee · Secure checkout · System access begins immediately</p>
+</section>
+
+<!-- FAQ -->
+<section style="background:var(--ink);padding:100px 64px;max-width:100%;">
+  <h2 class="faq-title reveal">COMMON<br>QUESTIONS</h2>
+  <div style="max-width:860px;margin:0 auto;">
+
+    <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+      <div class="faq-question">
+        <span class="faq-q-text">How is this different from just watching YouTube videos about auto claims?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-answer">
+        <p class="faq-a-text">YouTube gives you information. Claim Cipher Training gives you a structured execution path with performance checkpoints that validate you actually absorbed it. There's a big difference between understanding how supplements work and submitting one that gets approved. We train the second thing. YouTube teaches the first.</p>
+      </div>
+    </div>
+
+    <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+      <div class="faq-question">
+        <span class="faq-q-text">What exactly does "Cipher Verified" mean to an IA firm I'm applying to?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-answer">
+        <p class="faq-a-text">It means you've completed a structured evaluation — not just a course. You've submitted graded estimates on all three major platforms, run end-to-end claim simulations, written supplement requests and total loss flags, and passed a capstone claim reviewed against carrier standards. That's a specific, demonstrable set of capabilities — not a claim that you "learned" something.</p>
+      </div>
+    </div>
+
+    <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+      <div class="faq-question">
+        <span class="faq-q-text">How long does it take to get to Cipher Verified?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-answer">
+        <p class="faq-a-text">Most dedicated students reach Cipher Verified in 3–5 weeks. The pipeline is sequenced to move fast without cutting corners. You're working through checkpoints, not burning hours on content. Students who complete 2–3 hours of focused work per day and treat the first-income sprint as parallel work often have their first IA firm application submitted before they've earned their Cipher Verified designation.</p>
+      </div>
+    </div>
+
+    <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+      <div class="faq-question">
+        <span class="faq-q-text">Do I need a license to start? Can I earn while I'm still in training?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-answer">
+        <p class="faq-a-text">No license is required to begin the training. Several states have no appraiser licensing requirement at all — and the program covers exactly which states those are and how to enter them immediately. The $1,000 sprint built into the course is designed to run concurrently with your final training stages. By the time you're Cipher Verified, you should have applications in and be ready to accept an assignment.</p>
+      </div>
+    </div>
+
+    <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+      <div class="faq-question">
+        <span class="faq-q-text">I've tried IA Path or similar programs and got stuck. Will this be different?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-answer">
+        <p class="faq-a-text">Almost certainly — and here's why: you didn't get stuck because of a knowledge problem. You got stuck because there was no clear execution path. Claim Cipher Training is built around the exact problem you experienced. Every module has a next step. Every stage has a checkpoint. You never finish a module and wonder what to do next. That's not a tagline — that's the structural difference.</p>
+      </div>
+    </div>
+
+    <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+      <div class="faq-question">
+        <span class="faq-q-text">What is the realistic income once I'm working?</span>
+        <span class="faq-toggle">+</span>
+      </div>
+      <div class="faq-answer">
+        <p class="faq-a-text">Field inspection assignments typically pay $65–$200 per claim depending on vehicle type, complexity, and state. Desk review work pays $25–$65 per file and can be done remotely. A first-year appraiser with multiple IA firm rosters and reliable cycle time typically earns $40,000–$75,000. Those who build volume across multiple carrier programs and add desk work reach $90,000–$130,000+. The course includes the exact income math — per-claim fee structures, daily volume targets, and what it takes to hit each level.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="footer-logo">CLAIM CIPHER <span>TRAINING</span></div>
+    <p class="footer-tagline">"You won't just learn this work. You'll be verified ready to do it."</p>
+  </div>
+  <div>
+    <div class="footer-col-title">The System</div>
+    <ul class="footer-links">
+      <li><a href="#pipeline">How You Become Job-Ready</a></li>
+      <li><a href="#learnmatters">Learn What Actually Matters</a></li>
+      <li><a href="#modules">Execution Curriculum</a></li>
+      <li><a href="#verified">Cipher Verified™ System</a></li>
+      <li><a href="#firstclaim">Your First Claim</a></li>
+      <li><a href="#why">Why This Is Different</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="footer-col-title">Get Started</div>
+    <ul class="footer-links">
+      <li><a href="#pricing">Full System — $597</a></li>
+      <li><a href="#pricing">Split Pay — 3 × $199 (Klarna)</a></li>
+      <li><a href="#">FAQ</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span class="footer-copy">© 2024 Claim Cipher Training. All rights reserved.</span>
+  <span class="footer-copy">Performance-Based · Execution-First · Cipher Verified™</span>
+</div>
+
+<script>
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(r => obs.observe(r));
+
+const nav = document.querySelector('nav');
+window.addEventListener('scroll', () => {
+  nav.style.padding = window.scrollY > 60 ? '12px 48px' : '18px 48px';
+});
+
+document.querySelectorAll('.module-card').forEach((card, i) => {
+  card.style.animationDelay = `${i * 0.06}s`;
+});
+</script>
+</body>
+</html>
